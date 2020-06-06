@@ -49,7 +49,7 @@ jobs:
           at: /home/circleci
       - add_ssh_keys
       - run: echo "$fingerprint" >> ~/.ssh/known_hosts
-      - run: scp -r /home/circleci/cicd-react-trial/build ubuntu@13.229.132.103:/var/www/html
+      - run: scp -r /home/circleci/cicd-react-circleci/build ssh -o StrictHostKeyChecking=no ubuntu@13.229.132.103:/var/www/html
 
 workflows:
   version: 2
