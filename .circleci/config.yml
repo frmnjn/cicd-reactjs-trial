@@ -27,9 +27,9 @@ jobs:
       enabled: true
     steps:
       - attach_workspace:
-          at: ~/cicd-reactjs-trial
+          at: /home/circleci
       - store_artifacts:
-          path: ~/build
+          path: /home/circleci/cicd-react-circleci/build
           destination: finished-build
       - add_ssh_keys:
           fingerprints:
@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Copy build file to the server
           command: |
-            scp -r ~/build ubuntu@13.229.132.103:/var/www/html
+            scp -r /home/circleci/cicd-react-circleci/build ubuntu@13.229.132.103:/var/www/html
       - run:
           name: Restart Server
           command: |
