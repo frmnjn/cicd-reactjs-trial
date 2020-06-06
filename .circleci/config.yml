@@ -18,7 +18,7 @@ jobs:
             - ~/node_modules
       - run: npm run build
       - persist_to_workspace:
-          root: /home/circleci/cicd-react-trial
+          root: /home/circleci/cicd-reactjs-trial
           paths:
             - build
   deploy:
