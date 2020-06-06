@@ -27,6 +27,11 @@ jobs:
     machine:
       enabled: true
     steps:
+      - attach_workspace:
+          at: ~/cicd-reactjs-trial
+      - store_artifacts:
+          path: ~/cicd-reactjs-trial/build
+          destination: finished-build
       - add_ssh_keys:
           fingerprints:
             - $fingerprint
