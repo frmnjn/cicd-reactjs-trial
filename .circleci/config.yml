@@ -10,7 +10,19 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
+          # Download and cache dependencies
+            - restore_cache:
+                keys:
+                  - v1-dependencies-{{ checksum "package.lock" }}
+                  # fallback to using the latest cache if no exact match is found
+                  - v1-dependencies-
+
             - run: npm install
+
+            - save_cache:
+                paths:
+                  - ~/node_modules
+                key: v1-dependencies-{{ checksum "package.lock" }}
             - run: npm run build
   deploy:
     working_directory: ~/cicd-reactjs-trial
