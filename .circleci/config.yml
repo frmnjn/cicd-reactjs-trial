@@ -1,6 +1,8 @@
 version: 2.1
 jobs:
   build:
+    docker:
+      - image: circleci/node:8.11
     working_directory: ~/cicd-reactjs-trial
     steps:
       - checkout
