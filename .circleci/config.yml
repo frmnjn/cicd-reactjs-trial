@@ -31,9 +31,7 @@ jobs:
       - store_artifacts:
           path: /home/circleci/cicd-react-circleci/build
           destination: finished-build
-      - add_ssh_keys:
-          fingerprints:
-            - $fingerprint
+      - add_ssh_keys
       - run:
           name: Copy build file to the server
           command: |
@@ -41,6 +39,7 @@ jobs:
       - run:
           name: Restart Server
           command: |
+            echo '13.229.132.103 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLVXZ62WLenSVvMOXeSuNjqZlJzIMRm+JSwt8kxpwUogiJkU9+3udxkffluRG6PiNivHoyfVQMzVVbxvoNLIN5Y=' >> ~/.ssh/known_hosts
             ssh ubuntu@13.229.132.103 "sudo service apache2 restart && sudo service apache2 status"
 workflows:
     build-and-deploy:
