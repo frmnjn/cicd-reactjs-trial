@@ -24,10 +24,12 @@ jobs:
           paths:
             - build
   deploy:
-    <<: *defaults
+    docker:
+    - image: circleci/node:8.11
     steps:
       - attach_workspace:
           at: /home/circleci
+      - run: ls -la
       - store_artifacts:
           path: /home/circleci/cicd-react-circleci/build
           destination: finished-build
@@ -35,6 +37,7 @@ jobs:
       - run:
           name: Copy build file to the server
           command: |
+            echo '13.229.132.103 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLVXZ62WLenSVvMOXeSuNjqZlJzIMRm+JSwt8kxpwUogiJkU9+3udxkffluRG6PiNivHoyfVQMzVVbxvoNLIN5Y=' >> ~/.ssh/known_hosts
             scp -r /home/circleci/cicd-react-circleci/build ubuntu@13.229.132.103:/var/www/html
       - run:
           name: Restart Server
