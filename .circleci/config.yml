@@ -1,9 +1,11 @@
 version: 2.1
+defaults: &defaults
+  working_directory: /home/circleci/cicd-react-trial
+  docker:
+    - image: circleci/node:8.11
 jobs:
   build:
-    docker:
-      - image: circleci/node:8.11
-    working_directory: ~/cicd-reactjs-trial
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -22,9 +24,7 @@ jobs:
           paths:
             - build
   deploy:
-    working_directory: ~/cicd-reactjs-trial
-    machine:
-      enabled: true
+    <<: *defaults
     steps:
       - attach_workspace:
           at: /home/circleci
