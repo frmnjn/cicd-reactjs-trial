@@ -1,62 +1,54 @@
-version: 2
-
-defaults: &defaults
-  working_directory: /home/circleci/cicd-react-trial
-  docker:
-    - image: circleci/node:8.11
-
+version: 2.1
 jobs:
-  dependencies:
-    <<: *defaults
-
+  build:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/cicd-reactjs-trial
     steps:
       - checkout
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
-
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
       - run: npm install
       - save_cache:
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      - persist_to_workspace:
-          root: /home/circleci
-          paths:
-            - cicd-react-trial
-    
-  build:
-    <<: *defaults
-
-    steps:
-      - attach_workspace:
-          at: /home/circleci
-
+            - ~/node_modules
       - run: npm run build
-
       - persist_to_workspace:
           root: /home/circleci
           paths:
             - cicd-react-trial/build
-
   deploy:
-    <<: *defaults
-
+    working_directory: ~/cicd-reactjs-trial
+    machine:
+      enabled: true
     steps:
       - attach_workspace:
-          at: /home/circleci
-      - add_ssh_keys
-      - run: echo "$fingerprint" >> ~/.ssh/known_hosts
-      - run: scp -r /home/circleci/cicd-react-circleci/build ssh -o StrictHostKeyChecking=no ubuntu@13.229.132.103:/var/www/html
-
+          at: ~/cicd-reactjs-trial
+      - store_artifacts:
+          path: ~/build
+          destination: finished-build
+      - add_ssh_keys:
+          fingerprints:
+            - $fingerprint
+      - run:
+          name: Copy build file to the server
+          command: |
+            scp -r ~/build ubuntu@13.229.132.103:/var/www/html
+      - run:
+          name: Restart Server
+          command: |
+            ssh ubuntu@13.229.132.103 "sudo service apache2 restart && sudo service apache2 status"
 workflows:
-  version: 2
-  dependencies_and_build:
-    jobs:
-      - dependencies
-      - build:
-          requires:
-            - dependencies
-      - deploy
+    build-and-deploy:
+      jobs:
+        - build
+        - deploy:
+            requires:
+              - build # only deploy once build job has completed
+            filters:
+              branches:
+                only: master # only deploy on the master branch
