@@ -1,11 +1,7 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
 jobs:
   build:
     working_directory: ~/cicd-reactjs-trial
-    executor:
-      name: node/default
     steps:
       - checkout
       - restore_cache:
