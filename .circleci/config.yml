@@ -28,36 +28,41 @@ jobs:
       - persist_to_workspace:
           root: ~/repo
           paths:
-            - src
+            - build
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
-  deploy:
-    docker:
-      - image: circleci/node:12.18
-
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run: ls -la
-      - add_ssh_keys
       - run:
           name: upload files
           command: |
             echo '13.229.132.103 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLVXZ62WLenSVvMOXeSuNjqZlJzIMRm+JSwt8kxpwUogiJkU9+3udxkffluRG6PiNivHoyfVQMzVVbxvoNLIN5Y=' >> ~/.ssh/known_hosts
             scp -r ~/repo ubuntu@13.229.132.103:/var/www/html
 
+#   deploy:
+#     docker:
+#       - image: circleci/node:12.18
+
+#     steps:
+#       - attach_workspace:
+#           at: ~/repo
+#       - run: ls -la
+#       - add_ssh_keys
+#       - run:
+#           name: upload files
+#           command: |
+#             echo '13.229.132.103 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLVXZ62WLenSVvMOXeSuNjqZlJzIMRm+JSwt8kxpwUogiJkU9+3udxkffluRG6PiNivHoyfVQMzVVbxvoNLIN5Y=' >> ~/.ssh/known_hosts
+#             scp -r ~/repo ubuntu@13.229.132.103:/var/www/html
+
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
+#       - deploy:
+#           requires:
+#             - build
           filters:
             branches:
               only: master
