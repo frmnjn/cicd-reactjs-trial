@@ -18,8 +18,22 @@ jobs:
           key: v1-dependencies-{{ checksum "package-lock.json" }}
           paths:
             - ~/node_modules
+      - save_cache:
+          paths:
+            - ~/build
     
       - run: npm run build
+      - add_ssh_keys:
+          fingerprints:
+            - $fingerprint
+      - run:
+          name: Copy build file to the server
+          command: |
+            scp -R ~/build ubuntu@13.229.132.103:/var/www/html
+      - run:
+          name: Restart Server
+          command: |
+            ssh ubuntu@13.229.132.103 "sudo service apache2 restart && sudo service apache2 status"
   deploy:
     working_directory: ~/cicd-reactjs-trial
     machine:
@@ -36,7 +50,7 @@ jobs:
       - run:
           name: Copy build file to the server
           command: |
-            scp -r ~/cicd-reactjs-trial ubuntu@13.229.132.103:/var/www/html
+            scp -R ~/cicd-reactjs-trial ubuntu@13.229.132.103:/var/www/html
       - run:
           name: Restart Server
           command: |
