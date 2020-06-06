@@ -2,7 +2,8 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  build:
+    working_directory: ~/cicd-reactjs-trial
     executor:
       name: node/default
     steps:
@@ -10,8 +11,30 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run: npm test
+            - run: npm run build
+  deploy:
+    working_directory: ~/cicd-reactjs-trial
+    machine:
+      enabled: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - $fingerprint
+      - run:
+          name: Copy build file to the server
+          command: |
+            scp -r ~/cicd-reactjs-trial/build ubuntu@13.229.132.103:/var/www/html
+      - run:
+          name: Restart Server
+          command: |
+            ssh ubuntu@13.229.132.103 "sudo service apache2 restart && sudo service apache2 status"
 workflows:
-    build-and-test:
+    build-and-deploy:
       jobs:
-        - build-and-test
+        - build
+        - deploy:
+            requires:
+              - build # only deploy once build job has completed
+            filters:
+              branches:
+                only: master # only deploy on the master branch
