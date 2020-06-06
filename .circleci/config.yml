@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Copy build file to the server
           command: |
-            scp -r ~/cicd-reactjs-trial/build ubuntu@13.229.132.103:/var/www/html
+            scp -r ~/cicd-reactjs-trial ubuntu@13.229.132.103:/var/www/html
       - run:
           name: Restart Server
           command: |
