@@ -44,7 +44,8 @@ jobs:
       - run:
           name: upload files
           command: |
-            echo "$known_host" >> ~/.ssh/known_hosts
+            #echo "$known_host" >> ~/.ssh/known_hosts
+            ssh-keyscan -H 13.229.132.103 >> ~/.ssh/known_hosts
             scp -r ~/repo/build ubuntu@13.229.132.103:/var/www/html
 
 #   deploy:
