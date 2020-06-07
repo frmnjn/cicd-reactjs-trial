@@ -62,11 +62,11 @@ jobs:
 #             echo '13.229.132.103 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLVXZ62WLenSVvMOXeSuNjqZlJzIMRm+JSwt8kxpwUogiJkU9+3udxkffluRG6PiNivHoyfVQMzVVbxvoNLIN5Y=' >> ~/.ssh/known_hosts
 #             scp -r ~/repo ubuntu@13.229.132.103:/var/www/html
 
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build
+# workflows:
+#   version: 2
+#   build:
+#     jobs:
+#       - build
 #       - deploy:
 #           requires:
 #             - build
