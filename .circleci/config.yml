@@ -43,7 +43,7 @@ jobs:
           name: upload files
           command: |
             echo "$known_host" >> ~/.ssh/known_hosts
-            scp -r ~/repo/build ubuntu@13.229.132.103:/var/www/
+            scp -r ~/repo/build ubuntu@13.229.132.103:/var/www/html
 
 #   deploy:
 #     docker:
