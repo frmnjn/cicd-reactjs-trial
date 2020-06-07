@@ -25,19 +25,21 @@ jobs:
       - run: npm run build
       - run: ls -la
 
-      - persist_to_workspace:
-          root: ~/repo
-          paths:
-            - build
+#       - persist_to_workspace:
+#           root: ~/repo
+#           paths:
+#             - build
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+      - run : sudo apt install zip -y
+      - run : zip -r build.zip build/*
           
       - store_artifacts:
-          path: ~/repo/build
-          destination: finished-build
+          path: ~/repo/build.zip
+          destination: build
           
       - run:
           name: upload files
