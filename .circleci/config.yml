@@ -42,8 +42,8 @@ jobs:
       - run:
           name: upload files
           command: |
-            echo '13.229.132.103 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLVXZ62WLenSVvMOXeSuNjqZlJzIMRm+JSwt8kxpwUogiJkU9+3udxkffluRG6PiNivHoyfVQMzVVbxvoNLIN5Y=' >> ~/.ssh/known_hosts
-            scp -r ~/repo/build ubuntu@13.229.132.103:/var/www/html
+            echo "$known_host" >> ~/.ssh/known_hosts
+            scp -r ~/repo/build ubuntu@13.229.132.103:/var/www/
 
 #   deploy:
 #     docker:
